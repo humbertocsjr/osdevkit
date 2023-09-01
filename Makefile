@@ -5,6 +5,7 @@ defaults: all
 all clean install:  bin bindos bincpm binmsx binmsx2
 	@(cd osasm; $(MAKE) $@);
 	@(cd oslink; $(MAKE) $@);
+	@(cd osout; $(MAKE) $@);
 
 distro: all
 	@-rm distro/*.img distro/*.dsk distro/*.zip

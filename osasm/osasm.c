@@ -726,7 +726,6 @@ bool process_token()
                     }
                     if(!ok)
                     {
-                        printf("[%s?]", cmd_name);
                         error(_tok_col[_tok_curr], "Command not found");
                     }
                 }

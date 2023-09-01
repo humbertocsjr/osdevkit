@@ -13,15 +13,15 @@ Tools included
 - OSASM86 \
     Old-School Assembler for i86 (In planning)
 - OSLINK \
-    Old-School Multiplatform Linker (Beta)
+    Old-School Multiplatform Linker (Pre-release)
 - OSOUTBIN \
-    Old-School Generic Binary Generator (In planning)
+    Old-School Generic Binary Generator (Alpha)
 - OSOUTCOM \
-    Old-School COM Executable Generator (In planning)
+    Old-School COM Executable Generator (Alpha)
 - OSOUTEXE \
     Old-School EXE Executable Generator (In planning)
 - OSOUTPCB \
-    Old-School PC Boot Sector Generator (In planning)
+    Old-School PC Boot Sector Generator (Alpha)
 - OSOUTUZI \
     Old-School UZI Executable Generator (In planning)
 - OSOUTUZX \

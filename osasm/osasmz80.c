@@ -406,6 +406,7 @@ void asm_rst(char * file, uint16_t line, cmd_t * cmd, arg_t * arg1, arg_t * arg2
             byte += arg1->value;
             break;
         default:
+            printf("[%d?]", arg1->value);
             asm_error(file, line, "Argument not supported (asm_rst)");
             break;
     }

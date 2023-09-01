@@ -186,6 +186,9 @@ bool step_copy_start()
     {
         if(equals(LNK_FUNC_START, "_start"))
         {
+            obj_writestr(_out, LNK_FILE, _in_filename);
+            obj_writeword(_out, LNK_FILE_LINE, _in_line);
+            obj_writeword(_out, LNK_FILE_COL, _in_col);
             _start_func_found = true;
             do
             {
@@ -306,7 +309,7 @@ int main(int argc, char ** argv)
     _funcs_found_count = 0;
     _line_count = 0;
     execute_step(argc, argv, &step_copy_refs);
-    
+
     printf(" -= Statistics =-\n");
     printf("  - %d functions found\n", _funcs_found_count);
     printf("  - %d functions included\n", _refs_included_count);

@@ -12,9 +12,9 @@ uint16_t parsehex(char * txt, int len)
         if(isdigit(txt[i]))
             num = (num << 4) | (txt[i] - '0');
         else if(txt[i] >= 'A' && txt[i] <= 'F')
-            num = (num << 4) | (txt[i] - 'A');
+            num = (num << 4) | (txt[i] - 'A' + 10);
         else if(txt[i] >= 'a' && txt[i] <= 'f')
-            num = (num << 4) | (txt[i] - 'f');
+            num = (num << 4) | (txt[i] - 'f' + 10);
     }
     return num;
 }
@@ -66,10 +66,10 @@ uint16_t parsenum(char * txt, int len)
             if(isdigit(txt[i]))
                 num = (num << 4) | (txt[i] - '0');
             else if(txt[i] >= 'A' && txt[i] <= 'F')
-                num = (num << 4) | (txt[i] - 'A');
+                num = (num << 4) | (txt[i] - 'A' + 10);
             else if(txt[i] >= 'a' && txt[i] <= 'f')
-                num = (num << 4) | (txt[i] - 'f');
+                num = (num << 4) | (txt[i] - 'f' + 10);
         }
     }
-    
+    return num;
 }
