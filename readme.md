@@ -61,9 +61,10 @@ OSBASxxx --> OSASMxxx -\
 Test Machines
 -------------
 
-8080/Z80: \
+- 8080/Z80: \
     openMSX Emulator: Gradient Expert Plus + DDX 3.0 Floppy Cartridge
-8086: \
+
+- 8086: \
     PC Pentium 100 with MS-DOS 6.22
 
 Minimum Requirements
