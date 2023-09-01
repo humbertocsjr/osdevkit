@@ -3,7 +3,7 @@ Old-School DevKit
 
 This development kit is focused on retrocomputers, running natively on target machines as well as on modern computers.
 
-**INFO: ** This version is missing last step of assembling, will upload in 09/01/2023
+**INFO:** This version is missing last step of assembling, will upload in 09/01/2023
 
 Tools included
 --------------
