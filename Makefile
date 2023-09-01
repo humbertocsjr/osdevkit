@@ -7,7 +7,7 @@ all clean install:  bin bindos bincpm binmsx binmsx2
 	@(cd oslink; $(MAKE) $@);
 
 distro: all
-	@-rm distro/*.img distro/*.dsk
+	@-rm distro/*.img distro/*.dsk distro/*.zip
 	@(cd distro; $(MAKE) $@)
 
 test: all

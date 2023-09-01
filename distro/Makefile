@@ -1,7 +1,24 @@
+distro_zip: msxdos1.zip msxdos2.zip msdos.zip cpm.zip
+	@echo >> /dev/null
+distro_img: msxdos1.dsk msxdos1alt.dsk msxdos2.dsk msdos360.img msdos720.img msdos1440.img
+	@echo >> /dev/null
 
-distro: msxdos1.dsk msxdos1alt.dsk msxdos2.dsk msdos360.img msdos720.img msdos1440.img
+distro: distro_zip distro_img
+	@echo >> /dev/null
 
-msxdos1.dsk: $(wildcard ../binmsx/*.com) $(wildcard test/*)
+msdos.zip: $(wildcard ../bindos/*) $(wildcard test/*.s)
+	@zip -jq $@ $^
+
+msxdos1.zip: $(wildcard ../binmsx/*) $(wildcard test/*.s)
+	@zip -jq $@ $^
+
+msxdos2.zip: $(wildcard ../binmsx2/*) $(wildcard test/*.s)
+	@zip -jq $@ $^
+
+cpm.zip: $(wildcard ../bincpm/*) $(wildcard test/*.s)
+	@zip -jq $@ $^
+
+msxdos1.dsk: $(wildcard ../binmsx/*) $(wildcard test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=720  status=none
 	@mformat -f 720 -i $@
 	@dd if=../external/msxbin/BOOT of=$@ bs=512 count=1 conv=notrunc status=none
@@ -10,7 +27,7 @@ msxdos1.dsk: $(wildcard ../binmsx/*.com) $(wildcard test/*)
 	@mcopy -i $@ ../binmsx/* ::/
 	@mcopy -i $@ ../test/*.s ::/
 
-msxdos1alt.dsk: $(wildcard ../bincpm/*.com) $(wildcard test/*)
+msxdos1alt.dsk: $(wildcard ../bincpm/*) $(wildcard test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=720  status=none
 	@mformat -f 720 -i $@
 	@dd if=../external/msxbin/BOOT of=$@ bs=512 count=1 conv=notrunc status=none
@@ -19,7 +36,7 @@ msxdos1alt.dsk: $(wildcard ../bincpm/*.com) $(wildcard test/*)
 	@mcopy -i $@ ../bincpm/* ::/
 	@mcopy -i $@ ../test/*.s ::/
 
-msxdos2.dsk: $(wildcard ../binmsx2/*.com) $(wildcard ../test/*)
+msxdos2.dsk: $(wildcard ../binmsx2/*) $(wildcard ../test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=720  status=none
 	@mformat -f 720 -i $@
 	@dd if=../external/msx2bin/BOOT2 of=$@ bs=512 count=1 conv=notrunc status=none
@@ -31,20 +48,20 @@ msxdos2.dsk: $(wildcard ../binmsx2/*.com) $(wildcard ../test/*)
 	@mcopy -i $@ ../test/*.s ::/
 
 
-msdos360.img: $(wildcard ../bindos/*.com) $(wildcard ../test/*)
+msdos360.img: $(wildcard ../bindos/*) $(wildcard ../test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=360  status=none
 	@mformat -f 360 -i $@
 	@mcopy -i $@ ../bindos/* ::/
 	@mcopy -i $@ ../test/*.s ::/
 
 
-msdos720.img: $(wildcard ../bindos/*.com) $(wildcard ../test/*)
+msdos720.img: $(wildcard ../bindos/*) $(wildcard ../test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=720  status=none
 	@mformat -f 720 -i $@
 	@mcopy -i $@ ../bindos/* ::/
 	@mcopy -i $@ ../test/*.s ::/
 
-msdos1440.img: $(wildcard ../bindos/*.com) $(wildcard ../test/*)
+msdos1440.img: $(wildcard ../bindos/*) $(wildcard ../test/*)
 	@dd if=/dev/zero of=$@ bs=1024 count=1440  status=none
 	@mformat -f 1440 -i $@
 	@mcopy -i $@ ../bindos/* ::/

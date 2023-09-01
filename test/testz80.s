@@ -3,7 +3,7 @@ cpu z80
 
 section code
 
-pubproc _start
+proc _start
 nop
 hlt
 add A,A

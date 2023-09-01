@@ -1,0 +1,7 @@
+bin/*
+bincpm/*
+bindos/*
+binmsx/*
+binmsx2/*
+test/*.lnk
+test/*.obj
