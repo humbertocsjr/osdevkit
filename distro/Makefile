@@ -42,6 +42,7 @@ msxdos2.dsk: $(wildcard ../binmsx2/*) $(wildcard ../test/*)
 	@dd if=../external/msx2bin/BOOT2 of=$@ bs=512 count=1 conv=notrunc status=none
 	@mcopy -i $@ ../external/msx2bin/MSXDOS.SYS ::/MSXDOS.SYS
 	@mcopy -i $@ ../external/msx2bin/NEXTOR.SYS ::/NEXTOR.SYS
+	@mcopy -i $@ ../external/msx2bin/NEXTOR.SYS ::/MSXDOS2.SYS
 	@mcopy -i $@ ../external/msx2bin/COMMAND.COM ::/COMMAND.COM
 	@mcopy -i $@ ../external/msx2bin/COMMAND2.COM ::/COMMAND2.COM
 	@mcopy -i $@ ../binmsx2/* ::/
