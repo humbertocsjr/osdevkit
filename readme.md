@@ -3,7 +3,7 @@ Old-School DevKit
 
 This development kit is focused on retrocomputers, running natively on target machines as well as on modern computers.
 
-**INFO:** This version is missing last step of assembling, will upload in 09/01/2023
+**INFO:** This version is missing last step of assembling, will be uploaded on the night of 09/1/2023
 
 Tools included
 --------------
@@ -17,13 +17,13 @@ Tools included
 - OSLINK \
     Old-School Multiplatform Linker (Pre-release)
 - OSOUTBIN \
-    Old-School Generic Binary Generator (Alpha)
+    Old-School Generic Binary Generator (Pre-Alpha)
 - OSOUTCOM \
-    Old-School COM Executable Generator (Alpha)
+    Old-School COM Executable Generator (Pre-Alpha)
 - OSOUTEXE \
     Old-School EXE Executable Generator (In planning)
 - OSOUTPCB \
-    Old-School PC Boot Sector Generator (Alpha)
+    Old-School PC Boot Sector Generator (Pre-Alpha)
 - OSOUTUZI \
     Old-School UZI Executable Generator (In planning)
 - OSOUTUZX \
