@@ -1,6 +1,10 @@
-#define OIE abc 123 321
+#ifndef TESTC_C
+#define TESTC_C
 
 
-OIE OIE OIE
+void main (int argc, char ** argv)
+{
 
-OIE
+}
+
+#endif

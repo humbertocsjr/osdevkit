@@ -1,2 +1,2 @@
-// C Complex Pre-Processor
+// C Syntax Analyzer
 #include "oscc.h"

@@ -234,6 +234,55 @@ bool tok_src_next()
                     _next.type = TK_NEW_LINE;
                     return true;
                 }
+                else if(_src_c == '+')
+                {
+                    _next.type = TK_MATH_ADD;
+                }
+                else if(_src_c == '-')
+                {
+                    _next.type = TK_MATH_SUB;
+                }
+                else if(_src_c == '*')
+                {
+                    _next.type = TK_MATH_MUL;
+                }
+                else if(_src_c == '/')
+                {
+                    _next.type = TK_MATH_DIV;
+                }
+                else if(_src_c == '%')
+                {
+                    _next.type = TK_MATH_MOD;
+                }
+                else if(_src_c == '|')
+                {
+                    _next.type = TK_BIT_OR;
+                }
+                else if(_src_c == '&')
+                {
+                    _next.type = TK_BIT_AND;
+                }
+                else if(_src_c == '^')
+                {
+                    _next.type = TK_BIT_XOR;
+                }
+                else if(_src_c == '!')
+                {
+                    _next.type = TK_CMP_NOT;
+                }
+                else if(_src_c == '~')
+                {
+                    _next.type = TK_BIT_NOT;
+                    return true;
+                }
+                else if(_src_c == '<')
+                {
+                    _next.type = TK_CMP_LESSER;
+                }
+                else if(_src_c == '>')
+                {
+                    _next.type = TK_CMP_GREATER;
+                }
                 else if(_src_c == ' ' || _src_c == '\t')
                 {
                 }
@@ -276,7 +325,78 @@ bool tok_src_next()
                     return true;
                 }
                 break;
+            case TK_MATH_ADD:
+                if(_src_c == '+')
+                {
+                    _next.type = TK_MATH_INC;
+                    done = true;
+                }
+                else if(_src_c == '=')
+                {
+                    _next.type = TK_ASSIGN_ADD;
+                    done = true;
+                }
+                else 
+                {
+                    _src_c_skip = true;
+                    done = true;
+                }
+                break;
+            case TK_MATH_SUB:
+                if(_src_c == '-')
+                {
+                    _next.type = TK_MATH_DEC;
+                    done = true;
+                }
+                else if(_src_c == '=')
+                {
+                    _next.type = TK_ASSIGN_SUB;
+                    done = true;
+                }
+                else 
+                {
+                    _src_c_skip = true;
+                    done = true;
+                }
+                break;
+            case TK_MATH_MUL:
+                if(_src_c == '=')
+                {
+                    _next.type = TK_ASSIGN_MUL;
+                    done = true;
+                }
+                else 
+                {
+                    _src_c_skip = true;
+                    done = true;
+                }
+                break;
+            case TK_MATH_DIV:
+                if(_src_c == '=')
+                {
+                    _next.type = TK_ASSIGN_DIV;
+                    done = true;
+                }
+                else 
+                {
+                    _src_c_skip = true;
+                    done = true;
+                }
+                break;
+            case TK_MATH_MOD:
+                if(_src_c == '=')
+                {
+                    _next.type = TK_ASSIGN_MOD;
+                    done = true;
+                }
+                else 
+                {
+                    _src_c_skip = true;
+                    done = true;
+                }
+                break;
             default:
+                error_fmt1("NOT IMPLEMENTED TYPE '%x'", (size_t)_next.type);
                 break;
         }
         if(add_c)
@@ -332,7 +452,134 @@ void process_def(char * name)
 
 }
 
-void process(char * filename)
+void match_next_def_id()
+{
+    if(!tok_src_next() || _curr.type != TK_ID) error("Definition expected");
+}
+
+
+void process_if(bool execute)
+{
+    extern void process();
+    bool copy = false;
+    if(!strcmp(_curr.body, "#ifdef"))
+    {
+        match_next_def_id();
+        copy = def_exists(_curr.body);
+    }
+    else if(!strcmp(_curr.body, "#ifndef"))
+    {
+        match_next_def_id();
+        copy = !def_exists(_curr.body);
+    }
+    else if(!strcmp(_curr.body, "#else"))
+    {
+        copy = execute;
+    }
+    else error_fmt1("Pre-processor command not implemented: %s", (size_t)_curr.body);
+    if(copy && execute)
+    {
+        while(tok_src_next())
+        {
+            if(!strncmp(_curr.body, "#if", 3))
+            {
+                process_if(execute);
+            }
+            else if(!strncmp(_curr.body, "#elif", 5))
+            {
+                process_if(false);
+                return;
+            }
+            else if(!strcmp(_curr.body, "#else"))
+            {
+                process_if(false);
+                return;
+            }
+            else if(!strcmp(_curr.body, "#endif"))
+            {
+                return;
+            }
+            else
+            {
+                process();
+            }
+        }
+    }
+    else
+    {
+        while(tok_src_next())
+        {
+            if(!strncmp(_curr.body, "#if", 3))
+            {
+                process_if(false);
+            }
+            else if(!strncmp(_curr.body, "#elif", 5))
+            {
+                process_if(execute);
+                return;
+            }
+            else if(!strcmp(_curr.body, "#else"))
+            {
+                process_if(execute);
+                return;
+            }
+            else if(!strcmp(_curr.body, "#endif"))
+            {
+                return;
+            }
+        }
+    }
+}
+
+void process()
+{
+    extern void process_file(char * filename);
+    out_pos(&_curr);
+    if(_curr.type == TK_NEW_LINE) printf(".");
+    if(_curr.type == TK_ID && _curr.body[0] == '#')
+    {
+        printf(".");
+        if(!strcmp(_curr.body, "#define"))
+        {
+            if(!tok_src_next() || _curr.type != TK_ID) error("Definition name expected");
+            def_add(_curr.body);
+            buf_writeraw(PP_START, 0, 0);
+            out_fullpos(&_curr);
+            while(tok_src_next() && _curr.type != TK_NEW_LINE)
+            {
+                buf_write(&_curr);
+            }
+            buf_writeraw(PP_END, 0, 0);
+        }
+        else if(!strcmp(_curr.body, "#include"))
+        {
+            if(!tok_src_next() || _curr.type != TK_STR) error("Include filename expected");
+            process_file(_curr.body);
+        }
+        else if(!strncmp(_curr.body, "#if", 3))
+        {
+            process_if(true);
+        }
+        else error_fmt1("Pre-processor command not implemented: %s", (size_t)_curr.body);
+    }
+    else if(_curr.type == TK_ID)
+    {
+        if(def_exists(_curr.body))
+        {
+            process_def(_curr.body);
+        }
+        else
+        {
+            obj_write(_out, &_curr);
+        }
+    }
+    else
+    {
+        obj_write(_out, &_curr);
+    }
+}
+
+void process_file(char * filename)
 {
     if(_in3 != 0) error("Input files overflow");
     _in3 = _in2;
@@ -363,45 +610,7 @@ void process(char * filename)
     tok_src_next();
     while(tok_src_next())
     {
-        out_pos(&_curr);
-        if(_curr.type == TK_NEW_LINE) printf(".");
-        if(_curr.type == TK_ID && _curr.body[0] == '#')
-        {
-            printf(".");
-            if(!strcmp(_curr.body, "#define"))
-            {
-                if(!tok_src_next() || _curr.type != TK_ID) error("Definition name expected");
-                def_add(_curr.body);
-                buf_writeraw(PP_START, 0, 0);
-                out_fullpos(&_curr);
-                while(tok_src_next() && _curr.type != TK_NEW_LINE)
-                {
-                    buf_write(&_curr);
-                }
-                buf_writeraw(PP_END, 0, 0);
-            }
-            else if(!strcmp(_curr.body, "#include"))
-            {
-                if(!tok_src_next() || _curr.type != TK_STR) error("Include filename expected");
-                process(_curr.body);
-            }
-            else error_fmt1("Pre-processor command not implemented: %s", (size_t)_curr.body);
-        }
-        else if(_curr.type == TK_ID)
-        {
-            if(def_exists(_curr.body))
-            {
-                process_def(_curr.body);
-            }
-            else
-            {
-                obj_write(_out, &_curr);
-            }
-        }
-        else
-        {
-            obj_write(_out, &_curr);
-        }
+        process();
     }
 
     fclose(_in);
@@ -453,6 +662,7 @@ void main(int argc, char ** argv)
     _in2 = 0;
     _in3 = 0;
     if(!(_out = fopen(_out_name, "wb+"))) error_fmt1("File can't be opened: %s", (size_t)_out_name);
-    process(_in_name);
+    process_file(_in_name);
+    obj_writeraw(_out, LNK_END, 0, 0);
     fclose(_out);
 }
