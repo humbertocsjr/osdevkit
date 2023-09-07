@@ -2,6 +2,7 @@
 #include <osdevkit.h>
 
 #ifndef OSASM_H
+#define OSASM_H
 
 typedef struct
 {

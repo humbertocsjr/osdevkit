@@ -9,6 +9,7 @@
 #pragma pack(1)
 
 #ifndef OSDEVKIT_H
+#define OSDEVKIT_H
 
 #define OBJ_SIZE 256
 
@@ -17,6 +18,9 @@ typedef struct
     uint8_t type;
     uint8_t size;
     uint8_t body[OBJ_SIZE];
+    uint16_t internal_line;
+    uint16_t internal_col;
+    char * internal_name;
 } obj_t;
 
 extern bool obj_read(FILE * in, obj_t * obj);
@@ -50,17 +54,18 @@ extern uint16_t parsehex(char * txt, int len);
 #define LNK_EXPR_PUSH_VALUE 0x41
 #define LNK_EXPR_PUSH_CONST 0x42
 #define LNK_EXPR_PUSH_CURR_POS 0x43
-#define LNK_EXPR_PUSH_NEXT_POS 0x44
-#define LNK_EXPR_PUSH_START_POS 0x45
-#define LNK_EXPR_PUSH_POP_ADD_PUSH 0x46
-#define LNK_EXPR_PUSH_POP_SUB_PUSH 0x47
-#define LNK_EXPR_PUSH_POP_MUL_PUSH 0x48
-#define LNK_EXPR_PUSH_POP_DIV_PUSH 0x49
-#define LNK_EXPR_PUSH_POP_MOD_PUSH 0x4a
-#define LNK_EXPR_PUSH_POP_SHL_PUSH 0x4b
-#define LNK_EXPR_PUSH_POP_SHR_PUSH 0x4c
-#define LNK_EXPR_EMIT_POP_BYTE 0x4d
-#define LNK_EXPR_EMIT_POP_WORD 0x4e
+#define LNK_EXPR_PUSH_CODE_OFFSET_POS 0x44
+#define LNK_EXPR_PUSH_DATA_OFFSET_POS 0x45
+#define LNK_EXPR_PUSH_BSS_OFFSET_POS 0x46
+#define LNK_EXPR_PUSH_POP_ADD_PUSH 0x47
+#define LNK_EXPR_PUSH_POP_SUB_PUSH 0x48
+#define LNK_EXPR_PUSH_POP_MUL_PUSH 0x49
+#define LNK_EXPR_PUSH_POP_DIV_PUSH 0x4a
+#define LNK_EXPR_PUSH_POP_MOD_PUSH 0x4b
+#define LNK_EXPR_PUSH_POP_SHL_PUSH 0x4c
+#define LNK_EXPR_PUSH_POP_SHR_PUSH 0x4d
+#define LNK_EXPR_EMIT_POP_BYTE 0x4e
+#define LNK_EXPR_EMIT_POP_WORD 0x4f
 #define LNK_PTR_PUBLIC 0x50
 #define LNK_PTR_GLOBAL 0x51
 #define LNK_PTR_LOCAL 0x52
@@ -76,5 +81,58 @@ extern uint16_t parsehex(char * txt, int len);
 #define TK_COLON 0x88
 #define TK_IDX_OPEN 0x89
 #define TK_IDX_CLOSE 0x8a
+#define TK_SEMICOLON 0x8b
+#define TK_BLOCK_OPEN 0x8c
+#define TK_BLOCK_CLOSE 0x8d
+#define TK_NEW_LINE 0x8e
+
+#define TK_CUSTOM 0xc0
+
+
+typedef struct
+{
+    uint16_t low;
+    uint16_t high;
+} ui32_t;
+
+typedef struct
+{
+    uint16_t llow;
+    uint16_t lhigh;
+    uint16_t hlow;
+    uint16_t hhigh;
+} ui64_t;
+
+#define CMP_EQUAL 0
+#define CMP_NOT_EQUAL 1
+#define CMP_LESSER 2
+#define CMP_LESSER_EQUAL 3
+#define CMP_GREATER 4
+#define CMP_GREATER_EQUAL 5
+
+void ui32_clear(ui32_t * value);
+void ui32_parse(ui32_t * dest, char * orig);
+void ui32_tostring(char * dest, ui32_t * orig, uint16_t len);
+void ui32_add(ui32_t * dest, ui32_t * orig);
+void ui32_sub(ui32_t * dest, ui32_t * orig);
+void ui32_mul(ui32_t * dest, ui32_t * orig);
+bool ui32_div(ui32_t * dest, ui32_t * out_mod, ui32_t * orig);
+void ui32_shl(ui32_t * dest, uint8_t bits);
+void ui32_shr(ui32_t * dest, uint8_t bits);
+void ui32_rol(ui32_t * dest, uint8_t bits);
+void ui32_ror(ui32_t * dest, uint8_t bits);
+
+void ui64_clear(ui64_t * value);
+void ui64_parse(ui64_t * dest, char * orig);
+void ui64_tostring(char * dest, ui64_t * orig, uint16_t len);
+void ui64_add(ui64_t * dest, ui64_t * orig);
+void ui64_sub(ui64_t * dest, ui64_t * orig);
+void ui64_mul(ui64_t * dest, ui64_t * orig);
+bool ui64_div(ui64_t * dest, ui64_t * out_mod, ui64_t * orig);
+void ui64_shl(ui64_t * dest, uint8_t bits);
+void ui64_shr(ui64_t * dest, uint8_t bits);
+void ui64_rol(ui64_t * dest, uint8_t bits);
+void ui64_ror(ui64_t * dest, uint8_t bits);
+
 
 #endif

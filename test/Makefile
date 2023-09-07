@@ -5,3 +5,5 @@ test:
 	../bin/osasm80 test80
 	../bin/oslink test80
 	../bin/osoutcom test80
+	z80dasm -a test80.com
+	../bin/oscc0 testc

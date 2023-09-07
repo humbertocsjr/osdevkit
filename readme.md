@@ -3,8 +3,6 @@ Old-School DevKit
 
 This development kit is focused on retrocomputers, running natively on target machines as well as on modern computers.
 
-**INFO:** This version is missing last step of assembling, will be uploaded on the night of 09/1/2023
-
 Tools included
 --------------
 
@@ -17,13 +15,13 @@ Tools included
 - OSLINK \
     Old-School Multiplatform Linker (Pre-release)
 - OSOUTBIN \
-    Old-School Generic Binary Generator (Pre-Alpha)
+    Old-School Generic Binary Generator (Beta)
 - OSOUTCOM \
-    Old-School COM Executable Generator (Pre-Alpha)
+    Old-School COM Executable Generator (Beta)
 - OSOUTEXE \
     Old-School EXE Executable Generator (In planning)
 - OSOUTPCB \
-    Old-School PC Boot Sector Generator (Pre-Alpha)
+    Old-School PC Boot Sector Generator (Beta)
 - OSOUTUZI \
     Old-School UZI Executable Generator (In planning)
 - OSOUTUZX \
@@ -111,7 +109,7 @@ Preparation script:
 sudo apt install nasm build-essential mtools
 sudo snap install --beta z88dk
 git clone https://github.com/humbertocsjr/SmallerC.git
-cd Smaller-C
+cd SmallerC
 chmod +x ./configure
 ./configure
 make 

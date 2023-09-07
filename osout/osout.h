@@ -13,8 +13,12 @@ extern FILE * _out;
 extern char _out_name[NAME_LEN];
 extern obj_t _obj;
 extern uint16_t _file_count;
-extern uint16_t _org;
+extern uint16_t _org_code;
+extern uint16_t _org_data;
+extern uint16_t _org_bss;
 extern uint16_t _pos;
+
+void init();
 
 void out_byte(uint8_t value);
 void out_word(uint16_t value);

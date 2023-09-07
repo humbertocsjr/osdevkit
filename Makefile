@@ -6,6 +6,7 @@ all clean install:  bin bindos bincpm binmsx binmsx2
 	@(cd osasm; $(MAKE) $@);
 	@(cd oslink; $(MAKE) $@);
 	@(cd osout; $(MAKE) $@);
+	@(cd oscc; $(MAKE) $@);
 
 distro: all
 	@-rm distro/*.img distro/*.dsk distro/*.zip
