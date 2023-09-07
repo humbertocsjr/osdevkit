@@ -7,3 +7,4 @@ test:
 	../bin/osoutcom test80
 	z80dasm -a test80.com
 	../bin/oscc0 testc
+	../bin/oscc1 testc

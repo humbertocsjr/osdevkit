@@ -56,6 +56,27 @@ bool tok_next()
     memcpy(&_curr, &_next, sizeof(obj_t));
     if(_next.type == LNK_END) return false;
     if(_curr.type == LNK_END) return false;
-    obj_read(_in, &_next);
+    if(!obj_read(_in, &_next)) _next.type = LNK_END;
+    switch (_curr.type)
+    {
+        case LNK_FILE:
+            obj_write(_out, &_curr);
+            strncpy(_in_name, _curr.body, NAME_LEN);
+            _next.internal_name = _in_name;
+            _next.internal_line = 0;
+            _next.internal_col = 0;
+            return tok_next();
+            break;
+        case LNK_FILE_LINE:
+            obj_write(_out, &_curr);
+            _next.internal_line = *((uint16_t *)_curr.body);
+            return tok_next();
+            break;
+        case LNK_FILE_COL:
+            obj_write(_out, &_curr);
+            _next.internal_col = *((uint16_t *)_curr.body);
+            return tok_next();
+            break;
+    }
     return true;
 }

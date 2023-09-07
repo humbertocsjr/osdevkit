@@ -1,13 +1,6 @@
 // C Parser and Pre-processor
 #include "oscc.h"
 
-#define PP_START TK_CUSTOM
-#define PP_END TK_CUSTOM + 1
-#define PP_ARG1 TK_CUSTOM + 2
-#define PP_ARG2 TK_CUSTOM + 3
-#define PP_ARG3 TK_CUSTOM + 4
-#define PP_ARG4 TK_CUSTOM + 5
-
 #define DEFS_LEN 128
 #define BUFFER_LEN 8192
 

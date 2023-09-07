@@ -118,6 +118,11 @@ extern uint16_t parsehex(char * txt, int len);
 #define TK_ASSIGN_XOR 0xad
 #define TK_POINTER_MARKER 0xae
 #define TK_ADDRESS_MARKER 0xaf
+#define TK_GLOBAL_VAR_MARKER 0xb0
+#define TK_LOCAL_VAR_MARKER 0xb1
+#define TK_PUBLIC_VAR_MARKER 0xb2
+#define TK_END_VAR_MARKER 0xb3
+#define TK_INITIAL_VALUE_VAR_MARKER 0xb4
 
 #define TK_CUSTOM 0xc0
 
