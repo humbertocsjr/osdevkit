@@ -50,6 +50,9 @@ File extensions
 
 - .s: Old-School Assembler Source File
 - .bas: Old-School BASIC Source File
+- .c: Old-School C Source File
+- .cc1: Old-School C Token File
+- .cc: Old-School C Object File
 - .obj: Old-School Generic Object File
 - .lnk: Old-School Linked Object File
 
