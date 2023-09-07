@@ -34,6 +34,16 @@ Tools included
     Old-School BASIC Compiler for i80 (In planning)
 - OSBAS86 \
     Old-School BASIC Compiler for i86 (In planning)
+- OSCC0 \
+    Old-School C Parser and Pre-Processor (Alpha)
+- OSCC1 \
+    Old-School C Syntax Analyzer (In planning)
+- OSCCZ80 \
+    Old-School C Compiler for Z80 (In planning)
+- OSCC80 \
+    Old-School C Compiler for i80 (In planning)
+- OSCC86 \
+    Old-School C Compiler for i86 (In planning)
 
 File extensions
 ---------------
