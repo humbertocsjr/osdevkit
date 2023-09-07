@@ -14,13 +14,13 @@
 typedef struct
 {
     char * name;
-    char * contents;
+    uint8_t * contents;
 } def_t;
 
 char _src_c = 1;
 bool _src_c_skip = false;
 def_t _defs[DEFS_LEN];
-char _buffer[BUFFER_LEN];
+uint8_t _buffer[BUFFER_LEN];
 uint16_t _buffer_pos = 0;
 
 
@@ -57,7 +57,7 @@ void def_add(char * name)
         if(_defs[i].name == 0)
         {
             if((len + _buffer_pos) >= BUFFER_LEN) error("Definition buffer overflow");
-            _defs[i].name = &_buffer[_buffer_pos];
+            _defs[i].name = (char *)&_buffer[_buffer_pos];
             strcpy(_defs[i].name, name);
             _buffer_pos += len + 1;
             _defs[i].contents = &_buffer[_buffer_pos];
@@ -141,11 +141,11 @@ void buf_write(obj_t * obj)
     buf_writeraw(obj->type, obj->body, obj->size);
 }
 
-char * buf_read(obj_t * obj, char * buf)
+uint8_t * buf_read(obj_t * obj, uint8_t * buf)
 {
     obj->type = *buf++;
     obj->size = *buf++;
-    memset(obj->body, 0, BUFFER_LEN);
+    memset(obj->body, 0, OBJ_SIZE);
     if(obj->size > 0)
     {
         memcpy(obj->body, buf, obj->size);
@@ -315,7 +315,7 @@ void out_fullpos(obj_t * obj)
 
 void process_def(char * name)
 {
-    char * buf = def_get(name);
+    uint8_t * buf = def_get(name);
     buf = buf_read(&_def_obj, buf);
     while(_def_obj.type != PP_END)
     {
@@ -364,8 +364,10 @@ void process(char * filename)
     while(tok_src_next())
     {
         out_pos(&_curr);
+        if(_curr.type == TK_NEW_LINE) printf(".");
         if(_curr.type == TK_ID && _curr.body[0] == '#')
         {
+            printf(".");
             if(!strcmp(_curr.body, "#define"))
             {
                 if(!tok_src_next() || _curr.type != TK_ID) error("Definition name expected");
@@ -417,8 +419,10 @@ void process(char * filename)
     memcpy(&_in2_curr, &_in3_curr, sizeof(obj_t));
     memcpy(&_in2_next, &_in3_next, sizeof(obj_t));
     _in3 = 0;
+    printf("[ OK ]\n");
     if(_in != 0)
     {
+        printf(" - %s", _in_name);
         obj_writestr(_out, LNK_FILE, _in_name);
         obj_writeword(_out, LNK_FILE_LINE, _in_line);
         obj_writeword(_out, LNK_FILE_COL, _in_col);
