@@ -1,6 +1,7 @@
 // C Syntax Analyzer
 #include "oscc.h"
 
+char _cc1_name[NAME_LEN];
 bool _global_level = true;
 
 extern void process();
@@ -112,7 +113,12 @@ void process_type()
 {
     char type_id[ID_LEN];
     char name_id[ID_LEN];
+    uint8_t pointers = 0;
     uint8_t type = get_type(type_id);
+    while(_curr.type == TK_MATH_MUL && tok_next())
+    {
+        pointers++;
+    }
     tok_expected(TK_ID, "Name");
     tok_valid_id_size();
     strcpy(name_id, _curr.body);
@@ -121,6 +127,7 @@ void process_type()
     {
         obj_writeraw(_out, _global_level ? TK_PUBLIC_VAR_MARKER : TK_LOCAL_VAR_MARKER, name_id, strlen(name_id));
         obj_writeraw(_out, type, type_id, strlen(type_id));
+        if(pointers > 0) obj_writeword(_out, TK_POINTER_MARKER, pointers);
         obj_writeraw(_out, TK_END_VAR_MARKER, 0, 0);
         return;
     }
@@ -128,6 +135,7 @@ void process_type()
     {
         obj_writeraw(_out, _global_level ? TK_PUBLIC_VAR_MARKER : TK_LOCAL_VAR_MARKER, name_id, strlen(name_id));
         obj_writeraw(_out, type, type_id, strlen(type_id));
+        if(pointers > 0) obj_writeword(_out, TK_POINTER_MARKER, pointers);
         obj_writeraw(_out, TK_END_VAR_MARKER, 0, 0);
         return;
     }
@@ -135,6 +143,7 @@ void process_type()
     {
         obj_writeraw(_out, _global_level ? TK_PUBLIC_VAR_MARKER : TK_LOCAL_VAR_MARKER, 0, 0);
         obj_writeraw(_out, type, type_id, strlen(type_id));
+        if(pointers > 0) obj_writeword(_out, TK_POINTER_MARKER, pointers);
         obj_writeraw(_out, TK_INITIAL_VALUE_VAR_MARKER, 0, 0);
         tok_next();
         expr();
@@ -144,11 +153,13 @@ void process_type()
     {
         obj_writeraw(_out, LNK_FUNC_START, name_id, strlen(name_id));
         obj_writeraw(_out, type, type_id, strlen(type_id));
+        if(pointers > 0) obj_writeword(_out, TK_POINTER_MARKER, pointers);
         _global_level = false;
-        while (tok_next() && _curr.type != TK_PAR_CLOSE)
+        while (tok_next() && _curr.type != TK_PAR_CLOSE )
         {
             process_type();
-            if(_curr.type != TK_PAR_CLOSE) tok_expected(TK_COMMA, "','");
+            if(_curr.type == TK_PAR_CLOSE) break;
+            else tok_expected(TK_COMMA, "','");
         }
         tok_expected(TK_PAR_CLOSE, "')'");
         process();
@@ -157,7 +168,7 @@ void process_type()
         return;
     }
 
-    while(_curr.type == TK_COLON)
+    while(_curr.type == TK_COMMA)
     {
         if(tok_preview_is_type()) return;
         tok_next();
@@ -168,6 +179,7 @@ void process_type()
             tok_next();
             obj_writeraw(_out, _global_level ? TK_PUBLIC_VAR_MARKER : TK_LOCAL_VAR_MARKER, name_id, strlen(name_id));
             obj_writeraw(_out, type, type_id, strlen(type_id));
+            if(pointers > 0) obj_writeword(_out, TK_POINTER_MARKER, pointers);
             obj_writeraw(_out, TK_END_VAR_MARKER, 0, 0);
         }
     }
@@ -185,6 +197,7 @@ void process_block()
 
 void process()
 {
+    fflush(stdout);
     if(_curr.type == TK_ID)
     {
         if(tok_is_type())
@@ -216,7 +229,7 @@ void fail()
 
 void main(int argc, char ** argv)
 {
-    printf("Old-School C Compiler - Syntax Analizer\n");
+    printf("Old-School C Compiler - Syntax Analyzer\n");
     printf("Copyright (c) 2023, Humberto Costa\n\n");
     if(argc < 2)
     {
@@ -231,10 +244,11 @@ void main(int argc, char ** argv)
     strncpy(_in_name, argv[1], NAME_LEN - 5);
     strncpy(_out_name, argv[1], NAME_LEN - 5);
     strcat(_in_name, ".cc1");
+    strcpy(_cc1_name, _in_name);
     strcat(_out_name, ".cc");
     tok_init();
     if(!(_out = fopen(_out_name, "wb+"))) error_fmt1("File can't be opened: %s", (size_t)_out_name);
-    if(!(_in = fopen(_out_name, "rb"))) error_fmt1("File can't be opened: %s", (size_t)_in_name);
+    if(!(_in = fopen(_in_name, "rb"))) error_fmt1("File can't be opened: %s", (size_t)_in_name);
     while(tok_next())
     {
         process();
@@ -242,5 +256,7 @@ void main(int argc, char ** argv)
     obj_writeraw(_out, LNK_END, 0, 0);
     fclose(_in);
     fclose(_out);
-    remove(_in_name);
+    remove(_cc1_name);
+    printf("[ OK ]\n");
+    exit(0);
 }

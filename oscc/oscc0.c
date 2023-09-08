@@ -209,7 +209,7 @@ bool tok_src_next()
                 }
                 else if(_src_c == ')')
                 {
-                    _next.type = TK_PAR_OPEN;
+                    _next.type = TK_PAR_CLOSE;
                     return true;
                 }
                 else if(_src_c == '[')
